@@ -1,0 +1,67 @@
+<div class="mdc-layout-grid">
+  <div class="mdc-layout-grid__inner centered-grid">
+    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+      <img src="/assets/images/logo.svg" class="logo" alt="Multipli Credit Union Logo">
+    </div>
+    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+      <form [formGroup]="loginForm" name="loginForm" (ngSubmit)="onSubmit()">
+
+        <div class="mdc-card">
+          <div class="mdc-layout-grid__inner centered-grid login-form">
+            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+              <h3>{{ title }}</h3>
+            </div>
+
+            <div xcuMdcTextField
+              class="mdc-text-field text-field mdc-text-field--outlined mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+              <input formControlName="username" type="text" class="mdc-text-field__input" id="username" name="username"
+                required>
+              <div class="mdc-notched-outline">
+                <div class="mdc-notched-outline__leading"></div>
+                <div class="mdc-notched-outline__notch">
+                  <label class="mdc-floating-label" for="username">Username</label>
+                </div>
+                <div class="mdc-notched-outline__trailing"></div>
+              </div>
+            </div>
+            <p [hidden]="!(loginForm.get('username').invalid && (loginForm.get('username').dirty || loginForm.get('username').touched))"
+              id="username-helper-text"
+              class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg"
+              aria-hidden="true">
+              <span *ngIf="!!loginForm.get('username').errors && !!loginForm.get('username').errors.required">
+                Username is required
+              </span>
+            </p>
+
+            <div xcuMdcTextField
+              class="mdc-text-field text-field mdc-text-field--outlined mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+              <input formControlName="password" type="password" class="mdc-text-field__input" id="password"
+                name="password" required>
+              <div class="mdc-notched-outline">
+                <div class="mdc-notched-outline__leading"></div>
+                <div class="mdc-notched-outline__notch">
+                  <label class="mdc-floating-label" for="password">Password</label>
+                </div>
+                <div class="mdc-notched-outline__trailing"></div>
+              </div>
+            </div>
+            <p [hidden]="!(loginForm.get('password').invalid && (loginForm.get('password').dirty || loginForm.get('password').touched))"
+              id="password-helper-text"
+              class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg"
+              aria-hidden="true">
+              <span *ngIf="!!loginForm.get('password').errors && !!loginForm.get('password').errors.required">
+                Password is required
+              </span>
+            </p>
+
+            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+              <button type="submit" class="mdc-button mdc-button--outlined">
+                <span class="mdc-button__label">Sign In</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
