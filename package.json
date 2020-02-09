@@ -9,7 +9,7 @@
   },
   "homepage": "https://github.com/multiplicu/auth#readme",
   "peerDependencies": {
-    "@angular/common": "^8.2.13",
-    "@angular/core": "^8.2.13"
+    "@angular/common": "^9.0.0",
+    "@angular/core": "^9.0.0"
   }
 }
