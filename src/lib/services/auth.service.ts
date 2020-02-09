@@ -4,110 +4,122 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 export interface AuthUser {
-	access_token?: string;
-	expires_in?: number;
-	name: string;
-	picture: string;
-	tellerId: number;
-	token_type?: string;
-	token?: string;
-	userId: number;
-	username?: string;
+  access_token?: string;
+  expires_in?: number;
+  name?: string;
+  picture?: string;
+  tellerId?: number;
+  token_type?: string;
+  token?: string;
+  userId?: number;
+  username?: string;
 }
 
 @Injectable({
-	providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-	public token: string;
-	public user$: Observable<AuthUser>;
+  public token: string;
+  public user$: Observable<AuthUser>;
 
-	private isLoggedIn_: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-	private headers_: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
+  private isLoggedIn_: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    false
+  );
+  private headers_: HttpHeaders = new HttpHeaders({
+    'Content-Type': 'application/json',
+  });
 
-	public constructor(private http_: HttpClient) {
-		// Set token if saved in local storage
-		const currentUser: AuthUser = this.currentUser;
-		this.token = currentUser && currentUser.token;
-	}
+  public constructor(private http_: HttpClient) {
+    // Set token if saved in local storage
+    const currentUser: AuthUser = this.currentUser;
+    this.token = currentUser && currentUser.token;
 
-	public get currentUser(): AuthUser {
-		if (!localStorage.getItem('currentUser')) {
-			return null;
-		}
+    this.isLoggedIn_.next(currentUser !== null);
+  }
 
-		return JSON.parse(localStorage.getItem('currentUser'));
-	}
+  public get currentUser(): AuthUser {
+    if (!localStorage.getItem('currentUser')) {
+      return null;
+    }
 
-	public isAuthenticated(): boolean {
-		const user: AuthUser = this.currentUser;
+    return JSON.parse(localStorage.getItem('currentUser'));
+  }
 
-		this.user$ = of(user);
+  public isAuthenticated(): boolean {
+    const user: AuthUser = this.currentUser;
 
-		const isLoggedIn: boolean = user !== null;
-		if (isLoggedIn) {
-			this.isLoggedIn_.next(true);
-		}
+    this.user$ = of(user);
 
-		return isLoggedIn;
-	}
+    const isLoggedIn: boolean = user !== null;
+    if (isLoggedIn) {
+      this.isLoggedIn_.next(true);
+    }
 
-	public get isLoggedIn(): Observable<boolean> {
-		return this.isLoggedIn_.asObservable();
-	}
+    return isLoggedIn;
+  }
 
-	/**
-	 * Attempts a login request and returns an AuthUser if successful
-	 *
-	 * @param username
-	 * @param password
-	 * @param endpoint URL of the authorization service
-	 */
-	public login(username: string, password: string, endpoint: string): Observable<AuthUser> {
-		const body = JSON.stringify({ username, password });
+  public get isLoggedIn(): Observable<boolean> {
+    return this.isLoggedIn_.asObservable();
+  }
 
-		return this.http_.post<AuthUser>(endpoint, body, { headers: this.headers_ }).pipe(
-			tap((user: AuthUser) => {
-				const token: string = user && user.access_token;
+  /**
+   * Attempts a login request and returns an AuthUser if successful
+   *
+   * @param username
+   * @param password
+   * @param endpoint URL of the authorization service
+   */
+  public login(
+    username: string,
+    password: string,
+    endpoint: string
+  ): Observable<AuthUser> {
+    const body = JSON.stringify({ username, password });
 
-				if (token) {
-					this.storeUser({
-						username,
-						token,
-						userId: user.userId,
-						name: user.name,
-						tellerId: user.tellerId,
-						picture: user.picture
-					} as AuthUser);
+    return this.http_
+      .post<AuthUser>(endpoint, body, { headers: this.headers_ })
+      .pipe(
+        tap((user: AuthUser) => {
+          const token: string = user && user.access_token;
 
-					this.isLoggedIn_.next(true);
-				}
+          if (token) {
+            this.storeUser({
+              username,
+              token,
+              userId: user.userId,
+              name: user.name,
+              tellerId: user.tellerId,
+              picture: user.picture,
+            } as AuthUser);
 
-				return user;
-			})
-		);
-	}
+            this.isLoggedIn_.next(true);
+          }
 
-	/**
-	 * Clears out tokens and logged in user from local storage
-	 */
-	public logout(): void {
-		// Clear token and remove the local storage user
-		this.token = null;
+          return user;
+        })
+      );
+  }
 
-		localStorage.removeItem('currentUser');
-	}
+  /**
+   * Clears out tokens and logged in user from local storage
+   */
+  public logout(): void {
+    // Clear token and remove the local storage user
+    this.token = null;
 
-	public storeUser(data: AuthUser): void {
-		this.token = data.token;
+    localStorage.removeItem('currentUser');
+  }
 
-		if (this.currentUser) {
-			data = { ...this.currentUser, ...data };
-		}
+  public storeUser(data: AuthUser): void {
+    this.token = data.token;
 
-		localStorage.setItem('currentUser', JSON.stringify(data));
+    if (this.currentUser) {
+      data = { ...this.currentUser, ...data };
+    }
 
-		// Set the user data for use throughout the application
-		this.user$ = of(data);
-	}
+    localStorage.setItem('currentUser', JSON.stringify(data));
+
+    // Set the user data for use throughout the application
+    this.user$ = of(data);
+  }
 }
