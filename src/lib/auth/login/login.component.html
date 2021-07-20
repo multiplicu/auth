@@ -14,8 +14,8 @@
 
             <div xcuMdcTextField
               class="mdc-text-field text-field mdc-text-field--outlined mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
-              <input formControlName="username" type="text" class="mdc-text-field__input" id="username" name="username"
-                required>
+              <input formControlName="username" type="text" class="mdc-text-field__input"
+                id="username" name="username" required>
               <div class="mdc-notched-outline">
                 <div class="mdc-notched-outline__leading"></div>
                 <div class="mdc-notched-outline__notch">
@@ -28,15 +28,16 @@
               id="username-helper-text"
               class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg"
               aria-hidden="true">
-              <span *ngIf="!!loginForm.get('username').errors && !!loginForm.get('username').errors.required">
+              <span
+                *ngIf="!!loginForm.get('username').errors && !!loginForm.get('username').errors.required">
                 Username is required
               </span>
             </p>
 
             <div xcuMdcTextField
               class="mdc-text-field text-field mdc-text-field--outlined mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
-              <input formControlName="password" type="password" class="mdc-text-field__input" id="password"
-                name="password" required>
+              <input formControlName="password" type="password"
+                class="mdc-text-field__input" id="password" name="password" required>
               <div class="mdc-notched-outline">
                 <div class="mdc-notched-outline__leading"></div>
                 <div class="mdc-notched-outline__notch">
@@ -49,7 +50,8 @@
               id="password-helper-text"
               class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg"
               aria-hidden="true">
-              <span *ngIf="!!loginForm.get('password').errors && !!loginForm.get('password').errors.required">
+              <span
+                *ngIf="!!loginForm.get('password').errors && !!loginForm.get('password').errors.required">
                 Password is required
               </span>
             </p>
